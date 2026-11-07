@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Libreria PDF</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="theme-color" content="#1e5eff">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Libreria">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<section id="welcome" class="screen">
+  <img src="icons/icon-192.png" alt="" class="logo">
+  <h1>Libreria PDF</h1>
+  <p id="welcome-text">Scarica i documenti sul telefono per usarli anche senza connessione.</p>
+  <div id="ios-hint" class="hint" hidden>
+    Su iPhone: tocca <b>Condividi</b> e poi <b>Aggiungi a schermata Home</b>,
+    poi apri l'app dalla Home e scarica i documenti da lì.
+  </div>
+  <button id="btn-download" class="primary">Scarica la libreria</button>
+  <div id="progress" hidden>
+    <div class="bar"><div id="bar-fill"></div></div>
+    <small id="progress-text"></small>
+  </div>
+  <p id="error" class="error" hidden></p>
+</section>
+
+<section id="reader" hidden>
+  <header>
+    <button id="btn-back" aria-label="Indietro">&#8592;</button>
+    <button id="btn-home" aria-label="Home">&#8962;</button>
+    <span id="title">Libreria</span>
+  </header>
+  <div id="update-bar" hidden>
+    Disponibile un aggiornamento. <button id="btn-update">Aggiorna</button>
+  </div>
+  <div id="pages"></div>
+</section>
+
+<script type="module" src="app.js"></script>
+</body>
+</html>
