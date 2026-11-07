@@ -1,4 +1,4 @@
-const SHELL = 'shell-v3';
+const SHELL = 'shell-v4';
 const SHELL_FILES = [
   './', 'index.html', 'style.css', 'app.js', 'manifest.webmanifest',
   'pdfjs/pdf.min.mjs', 'pdfjs/pdf.worker.min.mjs',
