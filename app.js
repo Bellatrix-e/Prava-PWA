@@ -128,23 +128,29 @@ async function renderDoc(path, startPage) {
       viewport: page.getViewport({ scale: scale * dpr })
     }).promise;
 
-    const annots = await page.getAnnotations();
-    for (const a of annots) {
-      if (a.subtype !== 'Link') continue;
-      const href = a.unsafeUrl || a.url;
-      let handler = null;
-      if (href) handler = () => followLink(href);
-      else if (a.dest) handler = async () => followDest(pdf, a.dest, path);
-      if (!handler) continue;
-      const [x1, y1, x2, y2] = vp.convertToViewportRectangle(a.rect);
-      const link = document.createElement('a');
-      link.style.left = Math.min(x1, x2) + 'px';
-      link.style.top = Math.min(y1, y2) + 'px';
-      link.style.width = Math.abs(x2 - x1) + 'px';
-      link.style.height = Math.abs(y2 - y1) + 'px';
-      link.addEventListener('click', ev => { ev.preventDefault(); handler(); });
-      wrap.appendChild(link);
-    }
+    let found = 0;
+    const links = [];
+    try {
+      const annots = await page.getAnnotations();
+      for (const an of annots) {
+        if (an.subtype !== 'Link') continue;
+        const href = an.unsafeUrl || an.url;
+        let handler = null;
+        if (href) handler = () => followLink(href);
+        else if (an.dest) handler = () => followDest(pdf, an.dest, path);
+        if (!handler) continue;
+        const [x1, y1, x2, y2] = vp.convertToViewportRectangle(an.rect);
+        links.push({ l: Math.min(x1, x2), t: Math.min(y1, y2), r: Math.max(x1, x2), b: Math.max(y1, y2), handler });
+        found++;
+      }
+    } catch (e) { alert('Errore lettura link: ' + e.message); }
+    wrap.addEventListener('click', ev => {
+      const box = wrap.getBoundingClientRect();
+      const x = ev.clientX - box.left, y = ev.clientY - box.top;
+      const hit = links.find(k => x >= k.l && x <= k.r && y >= k.t && y <= k.b);
+      if (hit) hit.handler();
+    });
+    if (n === 1) els.title.textContent = titleOf(path) + ' (link: ' + found + ')';
   }
   if (target && startPage > 1) els.pages.scrollTop = target.offsetTop - 8;
 }
