@@ -139,7 +139,9 @@ async function renderDoc(path, startPage) {
         if (href) handler = () => followLink(href);
         else if (an.dest) handler = () => followDest(pdf, an.dest, path);
         if (!handler) continue;
-        const [x1, y1, x2, y2] = vp.convertToViewportRectangle(an.rect);
+           const [ma, mb, mc, md, me, mf] = vp.transform;
+   const x1 = ma * an.rect[0] + mc * an.rect[1] + me, y1 = mb * an.rect[0] + md * an.rect[1] + mf;
+   const x2 = ma * an.rect[2] + mc * an.rect[3] + me, y2 = mb * an.rect[2] + md * an.rect[3] + mf;
         links.push({ l: Math.min(x1, x2), t: Math.min(y1, y2), r: Math.max(x1, x2), b: Math.max(y1, y2), handler });
         found++;
       }
