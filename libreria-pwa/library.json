@@ -1,9 +1,0 @@
-{
-  "version": 1,
-  "main": "docs/MAIN.pdf",
-  "files": [
-    { "id": "main", "title": "Indice", "path": "docs/MAIN.pdf" },
-    { "id": "sez1", "title": "Ciao", "path": "docs/sezione1.pdf" },
-    { "id": "sez2", "title": "PJ", "path": "docs/sezione2.pdf" }
-  ]
-}
