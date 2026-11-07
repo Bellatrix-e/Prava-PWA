@@ -131,7 +131,7 @@ async function renderDoc(path, startPage) {
     const annots = await page.getAnnotations();
     for (const a of annots) {
       if (a.subtype !== 'Link') continue;
-      const href = a.url || a.unsafeUrl;
+      const href = a.unsafeUrl || a.url;
       let handler = null;
       if (href) handler = () => followLink(href);
       else if (a.dest) handler = async () => followDest(pdf, a.dest, path);
@@ -150,15 +150,18 @@ async function renderDoc(path, startPage) {
 }
 
 function followLink(href) {
-  if (/^(https?:|mailto:|tel:)/i.test(href)) {
-    const u = new URL(href, location.href);
-    if (u.origin !== location.origin) { window.open(href, '_blank', 'noopener'); return; }
+  let name = baseName(href);
+  if (!findByName(name)) {
+    try { name = new URL(href, location.href).hostname; } catch (e) {}
   }
-  const name = baseName(href);
-  const m = /[#&]page=(\d+)/i.exec(href);
   const file = findByName(name);
-  if (file) openDoc(file.path, m ? parseInt(m[1], 10) : 1);
-  else if (/^https?:|^mailto:|^tel:/i.test(href)) window.open(href, '_blank', 'noopener');
+  if (file) {
+    const m = /[#&]page=(\d+)/i.exec(href);
+    openDoc(file.path, m ? parseInt(m[1], 10) : 1);
+    return;
+  }
+  if (/^(https?:|mailto:|tel:)/i.test(href)) { window.open(href, '_blank', 'noopener'); return; }
+  alert('Link non riconosciuto: ' + href);
 }
 
 // collegamenti interni allo stesso PDF (destinazioni)
